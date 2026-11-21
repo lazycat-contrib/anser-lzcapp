@@ -1,0 +1,21 @@
+package: community.lazycat.app.anser
+version: 0.3.0
+name: Anser
+description: Self-hosted notification routing and delivery
+author: ca-x
+license: Apache-2.0
+homepage: https://github.com/ca-x/anser
+min_os_version: 1.6.0
+admin_only: true
+permissions:
+  required:
+    - net.internet
+  optional:
+    - user.notify
+locales:
+  zh:
+    name: 雁字
+    description: 自托管通知聚合与分发
+  en:
+    name: Anser
+    description: Self-hosted notification routing and delivery

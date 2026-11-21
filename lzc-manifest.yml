@@ -1,0 +1,37 @@
+application:
+  subdomain: anser
+  background_task: true
+  upstreams:
+    - location: /
+      backend: http://anser:8080/
+  injects:
+    - id: anser-admin-login
+      on: browser
+      auth_required: true
+      when:
+        - /login
+      do:
+        - src: builtin://simple-inject-password
+          params:
+            user: "{{ .U.admin_username | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"
+            password: "{{ .U.admin_password | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"
+            userSelector: 'input[autocomplete="username"]'
+            passwordSelector: 'input[autocomplete="current-password"]'
+            submitSelector: 'button[type="submit"]'
+            formSelector: 'form'
+            autoSubmit: true
+            submitMode: requestSubmit
+services:
+  anser:
+    # upstream: ghcr.io/ca-x/anser:0.3.0
+    image: ghcr.io/ca-x/anser:0.3.0
+    run_as: "10001:10001"
+    binds:
+      - /lzcapp/var:/data
+    environment:
+      - ANSER_BIND=0.0.0.0:8080
+      - ANSER_DATABASE=/data/anser.sqlite3
+      - ANSER_PUBLIC_URL=https://{{ .S.AppDomain }}
+      - "ANSER_BOOTSTRAP_USERNAME={{ .U.admin_username | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"
+      - "ANSER_BOOTSTRAP_PASSWORD={{ .U.admin_password | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"
+      - "ANSER_OUTBOUND_ALLOW_HOSTS={{ (.U.outbound_allow_hosts | default ``) | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"

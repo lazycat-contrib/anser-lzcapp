@@ -1,0 +1,57 @@
+version: 1
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: dist/anser.lpk
+  target_arch: amd64
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: anser
+release:
+  use_github_release_notes: true
+  github_repository: ca-x/anser
+  store_changelog_format: plain
+  changelog_template: "{{if .ReleaseNotes}}{{.ReleaseNotes}}{{else}}更新至 {{.Version}}。{{end}}"
+build:
+  toolchains: []
+  run_buildscript: false
+images:
+  - id: anser
+    target: service
+    service: anser
+    source: ghcr.io/ca-x/anser
+    channel: stable
+    tag_regex: '^[0-9]+\.[0-9]+\.[0-9]+$'
+    delivery:
+      mode: lazycat
+stores:
+  private:
+    enabled: true
+    name: 雁字
+    skip_if_version_exists: true
+  official:
+    enabled: true
+    skip_if_version_exists: true
+    create_if_missing: true
+    changelog_locales: [zh, en]
+    application:
+      language: zh
+      name: 雁字
+      brief: 集中管理并分发自托管通知
+      description: 在同一个管理台配置通知渠道、主题、投递策略和重试规则，并查看投递结果。支持九种通知渠道、共享出站代理和账号双重验证。
+      keywords: 通知, 主题, 分发
+      source: https://github.com/ca-x/anser
+      source_author: ca-x
+      support_pc: true
+      support_mobile: true
+      screenshot_pc_files:
+        - screenshots/desktop-overview.png
+        - screenshots/desktop-plugins.png
+      screenshot_mobile_files:
+        - screenshots/mobile-overview.png
+        - screenshots/mobile-channels.png
+        - screenshots/mobile-send.png
