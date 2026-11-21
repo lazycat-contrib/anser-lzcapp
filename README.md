@@ -12,12 +12,14 @@
 
 ## 界面截图
 
-截图采集自运行中的雁字，使用演示数据。移动端截图使用 720 × 405 的横屏响应式布局。
+截图采集自运行中的雁字，使用演示数据。移动端展示横屏管理和竖屏发送。
 
 ![桌面端投递总览](screenshots/desktop-overview.png)
 
 <details>
-<summary>桌面端渠道设置</summary>
+<summary>桌面端投递详情和渠道设置</summary>
+
+![个人收件箱的投递回执](screenshots/desktop-inbox-receipt.png)
 
 ![桌面端渠道设置](screenshots/desktop-plugins.png)
 
@@ -30,7 +32,7 @@
 
 ![移动端渠道插件](screenshots/mobile-channels.png)
 
-![移动端发送通知](screenshots/mobile-send.png)
+![移动端向个人收件箱发送消息](screenshots/mobile-send-portrait.png)
 
 </details>
 
