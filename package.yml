@@ -10,7 +10,6 @@ admin_only: true
 permissions:
   required:
     - net.internet
-  optional:
     - user.notify
 locales:
   zh:
