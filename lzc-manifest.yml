@@ -45,6 +45,7 @@ services:
     environment:
       - ANSER_BIND=0.0.0.0:8080
       - ANSER_LAZYCAT_INGRESS_SECRET={{ stable_secret "anser_device_discovery_v1" | sha256sum }}
+      - ANSER_LAZYCAT_LEGACY_TLS=1
       - ANSER_DATABASE=/data/anser.sqlite3
       - ANSER_PUBLIC_URL=https://{{ .S.AppDomain }}
       - "ANSER_BOOTSTRAP_USERNAME={{ .U.admin_username | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"
