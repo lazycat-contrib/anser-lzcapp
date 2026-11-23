@@ -42,7 +42,7 @@ stores:
       language: zh
       name: 雁字
       brief: 集中管理并分发自托管通知
-      description: 在同一个管理台配置通知渠道、主题、投递策略和重试规则，并查看投递结果。支持九种通知渠道、共享出站代理和账号双重验证。
+      description: 在同一个管理台配置通知渠道、主题、投递策略和重试规则，并查看投递结果。支持十六种通知渠道、共享出站代理、账号双重验证和个人资料设置。
       keywords: 通知, 主题, 分发
       source: https://github.com/ca-x/anser
       source_author: ca-x
@@ -52,6 +52,7 @@ stores:
         - screenshots/desktop-overview.png
         - screenshots/desktop-plugins.png
         - screenshots/desktop-devices.png
+        - screenshots/desktop-profile.png
         - screenshots/desktop-inbox-receipt-store.png
       screenshot_mobile_files:
         - screenshots/mobile-overview.png

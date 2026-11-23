@@ -35,6 +35,73 @@ application:
             formSelector: 'form'
             autoSubmit: true
             submitMode: requestSubmit
+    - id: anser-avatar-picker
+      on: browser
+      auth_required: true
+      when:
+        - /login
+        - /admin
+        - /admin/*
+      do:
+        - src: file:///lzcapp/pkg/content/lazycat-injects/lzc-file-chooser-inject.js
+          params:
+            fileBridgeRoot: /__anser_avatar_file
+            hooks:
+              fileInput: true
+              fileSystemAccess: false
+              downloadAnchor: false
+    - id: anser-avatar-picker-frame
+      on: response
+      auth_required: true
+      when:
+        - /login
+        - /admin
+        - /admin/*
+      do: |
+        const domain = "{{ .S.AppDomain }}";
+        const box = domain.match(/^anser\.([a-z0-9-]+\.heiyu\.space)$/i)?.[1];
+        const policy = ctx.headers.get("Content-Security-Policy");
+        if (box && policy && ctx.safe_uid) {
+          ctx.headers.set("Content-Security-Policy", policy + "; frame-src https://file." + box);
+        }
+    - id: anser-avatar-file
+      on: request
+      auth_required: true
+      when:
+        - /__anser_avatar_file/*
+      do: |
+        const domain = "{{ .S.AppDomain }}";
+        const box = domain.match(/^anser\.([a-z0-9-]+\.heiyu\.space)$/i)?.[1];
+        if (!box || !ctx.safe_uid || ctx.headers.get("Sec-Fetch-Site") !== "same-origin"
+          || ctx.headers.get("Sec-Fetch-Dest") !== "empty"
+          || !["cors", "same-origin"].includes(ctx.headers.get("Sec-Fetch-Mode"))) {
+          ctx.response.send(403, "Open the avatar picker from the signed-in Anser app.");
+          return;
+        }
+        if (!["GET", "HEAD"].includes(ctx.request.method)) {
+          ctx.response.send(405, "The avatar picker only reads images.");
+          return;
+        }
+        const prefix = "/__anser_avatar_file/";
+        const path = ctx.request.path;
+        const filename = path.slice(prefix.length);
+        if (!path.startsWith(prefix)
+          || !/\.(?:png|jpe?g|webp)$/i.test(filename)
+          || /[\x00-\x1f\x7f\\?#]|%(?:00|2e|2f|5c|25)/i.test(filename)
+          || filename.split("/").some((segment) => !segment || segment === "." || segment === "..")) {
+          ctx.response.send(400, "Select a PNG, JPEG or WebP image.");
+          return;
+        }
+        ctx.headers.del("Origin");
+        ctx.headers.del("Referer");
+        ctx.headers.del("Authorization");
+        ctx.proxy.to("https://file." + box, {
+          path: "/files/home/" + filename,
+          query: "",
+          use_target_host: true,
+          timeout_ms: 15000,
+          on_fail: "error",
+        });
 services:
   anser:
     # upstream: ghcr.io/ca-x/anser:0.5.4
