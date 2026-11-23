@@ -35,8 +35,8 @@ application:
             submitMode: requestSubmit
 services:
   anser:
-    # upstream: ghcr.io/ca-x/anser:0.5.0
-    image: registry.lazycat.cloud/czyt/ca-x/anser:801e7d533bf65dea
+    # upstream: ghcr.io/ca-x/anser:0.5.1
+    image: registry.lazycat.cloud/czyt/ca-x/anser:1b9c063e5ecfe9a2
     run_as: "10001:10001"
     binds:
       - /lzcapp/var:/data
