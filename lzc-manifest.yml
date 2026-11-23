@@ -5,6 +5,18 @@ application:
     - location: /
       backend: http://anser:8080/
   injects:
+    - id: anser-device-discovery
+      on: request
+      auth_required: false
+      when:
+        - /v1/channels/lazycat/devices
+      do: |
+        ctx.headers.del("X-Anser-Lazycat-Uid");
+        ctx.headers.del("X-Anser-Lazycat-Proof");
+        if (ctx.safe_uid) {
+          ctx.headers.set("X-Anser-Lazycat-Uid", ctx.safe_uid);
+          ctx.headers.set("X-Anser-Lazycat-Proof", "{{ stable_secret "anser_device_discovery_v1" | sha256sum }}");
+        }
     - id: anser-admin-login
       on: browser
       auth_required: true
@@ -30,6 +42,7 @@ services:
       - /lzcapp/var:/data
     environment:
       - ANSER_BIND=0.0.0.0:8080
+      - ANSER_LAZYCAT_INGRESS_SECRET={{ stable_secret "anser_device_discovery_v1" | sha256sum }}
       - ANSER_DATABASE=/data/anser.sqlite3
       - ANSER_PUBLIC_URL=https://{{ .S.AppDomain }}
       - "ANSER_BOOTSTRAP_USERNAME={{ .U.admin_username | quote | trimPrefix (printf `%c` 34) | trimSuffix (printf `%c` 34) }}"

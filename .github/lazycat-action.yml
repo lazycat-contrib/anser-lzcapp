@@ -51,6 +51,7 @@ stores:
       screenshot_pc_files:
         - screenshots/desktop-overview.png
         - screenshots/desktop-plugins.png
+        - screenshots/desktop-devices.png
         - screenshots/desktop-inbox-receipt-store.png
       screenshot_mobile_files:
         - screenshots/mobile-overview.png
