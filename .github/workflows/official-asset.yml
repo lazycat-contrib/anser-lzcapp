@@ -24,12 +24,12 @@ jobs:
           set -euo pipefail
           [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
           file="community.lazycat.app.anser-v$VERSION-official.lpk"
-          gh release download "v$VERSION" --pattern "$file" --dir "$RUNNER_TEMP"
+          gh release download "v$VERSION" --pattern "$file" --dir "$GITHUB_WORKSPACE/dist"
           digest=$(gh release view "v$VERSION" --json assets | jq -er --arg f "$file" '.assets[] | select(.name == $f) | .digest')
           [[ "$digest" =~ ^sha256:[a-f0-9]{64}$ ]]
-          echo "${digest#sha256:}  $RUNNER_TEMP/$file" | sha256sum --check
+          echo "${digest#sha256:}  $GITHUB_WORKSPACE/dist/$file" | sha256sum --check
           echo "sha256=${digest#sha256:}" >> "$GITHUB_OUTPUT"
-          echo "path=$RUNNER_TEMP/$file" >> "$GITHUB_OUTPUT"
+          echo "path=$GITHUB_WORKSPACE/dist/$file" >> "$GITHUB_OUTPUT"
       - uses: ca-x/lazycat-github-action@v1
         env:
           LZC_API_TOKEN: ${{ secrets.LZC_API_TOKEN }}
