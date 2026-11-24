@@ -104,8 +104,8 @@ application:
         });
 services:
   anser:
-    # upstream: ghcr.io/ca-x/anser:0.7.5
-    image: registry.lazycat.cloud/czyt/ca-x/anser:0d6f89929d0650f4
+    # upstream: ghcr.io/ca-x/anser:0.7.6
+    image: registry.lazycat.cloud/czyt/ca-x/anser:e9602497b9c9625e
     run_as: "10001:10001"
     binds:
       - /lzcapp/var:/data
