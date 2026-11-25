@@ -1,5 +1,5 @@
 package: community.lazycat.app.anser
-version: 0.7.6
+version: 0.8.0
 name: Anser
 description: Self-hosted notification routing and delivery
 author: ca-x
